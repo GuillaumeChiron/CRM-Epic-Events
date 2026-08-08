@@ -1,0 +1,25 @@
+# Environnement
+.env
+.env.*
+!.env.example
+venv/
+env/
+.venv/
+
+# Bytecode / cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Tests / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+
+# IDE / éditeurs
+.vscode/
+.idea/
