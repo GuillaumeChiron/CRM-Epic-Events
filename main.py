@@ -1,7 +1,7 @@
 from database.database import engine
 from models.base import Base
 
-# Ces imports enregistrent les tables dans Base.metadata
+# Import des tables dans metadata
 from models.user import User
 from models.client import Client
 from models.contract import Contract
