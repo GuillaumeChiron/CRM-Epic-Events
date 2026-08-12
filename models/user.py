@@ -14,9 +14,9 @@ from models.base import Base
 
 
 class UserRole(PyEnum):
-    COMMERCIAL = "commercial"
-    GESTION = "gestion"
-    SUPPORT = "support"
+    commercial = "commercial"
+    gestion = "gestion"
+    support = "support"
 
 
 class User(Base):

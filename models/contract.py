@@ -1,12 +1,8 @@
 from sqlalchemy import (
-    String,
-    Integer,
     Numeric,
     Boolean,
-    Date,
     DateTime,
     ForeignKey,
-    Enum,
     Uuid,
     func,
 )
@@ -31,4 +27,5 @@ class Contract(Base):
     )
     signed: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     client_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("clients.id"))
+
     client: Mapped["Client"] = relationship("Client")

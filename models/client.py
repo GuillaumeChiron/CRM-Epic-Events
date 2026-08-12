@@ -1,12 +1,7 @@
 from sqlalchemy import (
     String,
-    Integer,
-    Float,
-    Boolean,
-    Date,
     DateTime,
     ForeignKey,
-    Enum,
     Uuid,
     func,
 )
@@ -33,4 +28,5 @@ class Client(Base):
     )
     last_contact_at: Mapped[datetime] = mapped_column(DateTime)
     commercial_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("utilisateurs.id"))
+
     commercial: Mapped["User"] = relationship("User")
