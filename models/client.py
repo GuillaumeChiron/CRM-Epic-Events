@@ -26,7 +26,7 @@ class Client(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, server_default=func.now()
     )
-    last_contact_at: Mapped[datetime] = mapped_column(DateTime)
+    last_contact_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     commercial_id: Mapped[UUID | None] = mapped_column(
         Uuid,
         ForeignKey("utilisateurs.id", ondelete="SET NULL"),
