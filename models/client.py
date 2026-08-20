@@ -8,7 +8,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from uuid import UUID, uuid4
-from datetime import datetime, date
+from datetime import datetime
 
 from models.base import Base
 from models.user import User
@@ -27,6 +27,10 @@ class Client(Base):
         DateTime, nullable=False, server_default=func.now()
     )
     last_contact_at: Mapped[datetime] = mapped_column(DateTime)
-    commercial_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("utilisateurs.id"))
+    commercial_id: Mapped[UUID | None] = mapped_column(
+        Uuid,
+        ForeignKey("utilisateurs.id", ondelete="SET NULL"),
+        nullable=True,
+    )
 
-    commercial: Mapped["User"] = relationship("User")
+    commercial: Mapped["User | None"] = relationship("User")

@@ -26,6 +26,10 @@ class Contract(Base):
         DateTime, nullable=False, server_default=func.now()
     )
     signed: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
-    client_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey("clients.id"))
+    client_id: Mapped[UUID] = mapped_column(
+        Uuid,
+        ForeignKey("clients.id", ondelete="RESTRICT"),
+        nullable=False,
+    )
 
     client: Mapped["Client"] = relationship("Client")
