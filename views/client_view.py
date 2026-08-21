@@ -4,12 +4,13 @@ from models.client import Client
 class ClientView:
 
     def create_client(self):
-        first_name = input()
-        last_name = input()
-        email = input()
-        phone = input()
-        company = input()
-        return first_name, last_name, email, phone, company
+        first_name = input("prenom: ")
+        last_name = input("nom: ")
+        email = input("email: ")
+        phone = input("telephone: ")
+        company = input("nom de l'entreprise: ")
+        commercial_email = input("email commercial associé: ")
+        return first_name, last_name, email, phone, company, commercial_email
 
     def display_client(self, client: Client):
         print(
