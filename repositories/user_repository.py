@@ -26,6 +26,9 @@ class UserRepository:
         users = self.session.scalars(select(User)).all()
         return users
 
+    def update(self, user, data):
+        pass
+
     def delete_user(self, user):
         self.session.delete(user)
         self.session.commit()
