@@ -9,9 +9,10 @@ class UserRepository:
     def __init__(self, session):
         self.session = session
 
-    def add(self, client):
-        self.session.add(client)
+    def create(self, user):
+        self.session.add(user)
         self.session.commit()
+        self.session.refresh(user)
 
     def get_by_id(self, user_id):
         user = self.session.get(User, UUID(user_id))
@@ -24,3 +25,7 @@ class UserRepository:
     def users_list(self):
         users = self.session.scalars(select(User)).all()
         return users
+
+    def delete_user(self, user):
+        self.session.delete(user)
+        self.session.commit()
