@@ -18,7 +18,7 @@ class UserRepository:
         user = self.session.get(User, UUID(user_id))
         return user
 
-    def get_by_email(self, email):
+    def get_by_email(self, email) -> User:
         user = self.session.scalars(select(User).where(User.email == email)).first()
         return user
 
@@ -32,15 +32,3 @@ class UserRepository:
     def delete_user(self, user):
         self.session.delete(user)
         self.session.commit()
-
-    def get_events_without_support(self):
-        pass
-
-    def get_events_by_support_id(self):
-        pass
-
-    def get_upcoming_events(self):
-        pass
-
-    def search_events_by_client_or_contract(self):
-        pass

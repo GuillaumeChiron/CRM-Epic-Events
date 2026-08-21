@@ -9,7 +9,7 @@ class ClientRepository:
     def __init__(self, session):
         self.session = session
 
-    def create(self, client):
+    def create(self, client: Client):
         self.session.add(client)
         self.session.commit()
         self.session.refresh(client)
