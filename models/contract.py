@@ -4,6 +4,7 @@ from sqlalchemy import (
     DateTime,
     ForeignKey,
     Uuid,
+    CheckConstraint,
     func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -21,7 +22,11 @@ class Contract(Base):
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     total_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
-    remaining_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
+    remaining_amount: Mapped[Decimal] = mapped_column(
+        Numeric(10, 2),
+        CheckConstraint("remaing_amount >= 0 AND remaining_amount <= total_amount"),
+        nullable=False,
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, server_default=func.now()
     )
