@@ -34,8 +34,40 @@ class ClientRepository:
         clients = self.session.scalars(select(Client)).all()
         return clients
 
-    def update(self, client, data):
-        pass
+    def update_first_name(self, client, first_name):
+        client.first_name = first_name
+        self.session.commit()
+        self.session.refresh(client)
+
+    def update_last_name(self, client, last_name):
+        client.last_name = last_name
+        self.session.commit()
+        self.session.refresh(client)
+
+    def update_email(self, client, email):
+        client.email = email
+        self.session.commit()
+        self.session.refresh(client)
+
+    def update_phone(self, client, phone):
+        client.phone = phone
+        self.session.commit()
+        self.session.refresh(client)
+
+    def update_company(self, client, company):
+        client.company = company
+        self.session.commit()
+        self.session.refresh(client)
+
+    def update_last_contact_at(self, client, last_contact_at):
+        client.last_contact_at = last_contact_at
+        self.session.commit()
+        self.session.refresh(client)
+
+    def update_commercial_id(self, client, commercial_id):
+        client.commercial_id = commercial_id
+        self.session.commit()
+        self.session.refresh(client)
 
     def delete(self, client):
         self.session.delete(client)

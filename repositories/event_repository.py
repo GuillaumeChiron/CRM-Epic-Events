@@ -16,13 +16,51 @@ class EventRepository:
 
     def get_by_id(self, event_id):
         event = self.session.get(Event, UUID(event_id))
+        return event
 
     def event_list(self):
         events = self.session.scalars(select(Event)).all()
         return events
 
-    def update(self):
-        pass
+    def update_event_name(self, event, event_name):
+        event.event_name = event_name
+        self.session.commit()
+        self.session.refresh(event)
+
+    def update_contract_id(self, event, contract_id):
+        event.contract_id = contract_id
+        self.session.commit()
+        self.session.refresh(event)
+
+    def update_date_start(self, event, date_start):
+        event.date_start = date_start
+        self.session.commit()
+        self.session.refresh(event)
+
+    def update_date_end(self, event, date_end):
+        event.date_end = date_end
+        self.session.commit()
+        self.session.refresh(event)
+
+    def update_location(self, event, location):
+        event.location = location
+        self.session.commit()
+        self.session.refresh(event)
+
+    def update_attendees(self, event, attendees):
+        event.attendees = attendees
+        self.session.commit()
+        self.session.refresh(event)
+
+    def update_notes(self, event, notes):
+        event.notes = notes
+        self.session.commit()
+        self.session.refresh(event)
+
+    def update_support_id(self, event, support_id):
+        event.support_id = support_id
+        self.session.commit()
+        self.session.refresh(event)
 
     def delete(self, event):
         self.session.delete(event)

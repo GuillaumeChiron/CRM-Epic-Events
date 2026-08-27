@@ -26,8 +26,30 @@ class UserRepository:
         users = self.session.scalars(select(User)).all()
         return users
 
-    def update(self, user, data):
-        pass
+    def update_email(self, user, email):
+        user.email = email
+        self.session.commit()
+        self.session.refresh(user)
+
+    def update_password(self, user, password_hash):
+        user.password_hash = password_hash
+        self.session.commit()
+        self.session.refresh(user)
+
+    def update_first_name(self, user, first_name):
+        user.first_name = first_name
+        self.session.commit()
+        self.session.refresh(user)
+
+    def update_last_name(self, user, last_name):
+        user.last_name = last_name
+        self.session.commit()
+        self.session.refresh(user)
+
+    def update_role(self, user, role):
+        user.role = role
+        self.session.commit()
+        self.session.refresh(user)
 
     def delete_user(self, user):
         self.session.delete(user)

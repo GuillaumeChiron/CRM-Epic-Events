@@ -22,8 +22,25 @@ class ContractRepository:
         contracts = self.session.scalars(select(Contract)).all()
         return contracts
 
-    def update(self, contract):
-        pass
+    def update_total_amount(self, contract, total_amount):
+        contract.total_amount = total_amount
+        self.session.commit()
+        self.session.refresh(contract)
+
+    def update_remaining_amount(self, contract, remaining_amount):
+        contract.remaining_amount = remaining_amount
+        self.session.commit()
+        self.session.refresh(contract)
+
+    def update_signed(self, contract, signed):
+        contract.signed = signed
+        self.session.commit()
+        self.session.refresh(contract)
+
+    def update_client_id(self, contract, client_id):
+        contract.client_id = client_id
+        self.session.commit()
+        self.session.refresh(contract)
 
     def delete(self, contract):
         self.session.delete(contract)
