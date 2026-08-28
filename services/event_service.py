@@ -38,7 +38,7 @@ class EventService:
 
         event = Event(
             event_name=event_name,
-            contract_id=contract_id,
+            contract_id=contract.id,
             date_start=date_start,
             date_end=date_end,
             location=location,
