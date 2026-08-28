@@ -22,11 +22,7 @@ class Contract(Base):
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     total_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
-    remaining_amount: Mapped[Decimal] = mapped_column(
-        Numeric(10, 2),
-        CheckConstraint("remaining_amount >= 0 AND remaining_amount <= total_amount"),
-        nullable=False,
-    )
+    remaining_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, server_default=func.now()
     )
@@ -38,3 +34,10 @@ class Contract(Base):
     )
 
     client: Mapped["Client"] = relationship("Client")
+
+    __table_args__ = (
+        CheckConstraint(
+            "remaining_amount >= 0 AND remaining_amount <= total_amount",
+            name="ck_contrats_remaining_amount_range",
+        ),
+    )

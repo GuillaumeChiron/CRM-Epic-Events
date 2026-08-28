@@ -12,4 +12,8 @@ user_service = UserService(user_repository)
 email, password = user_view.login()
 current_user = user_service.authenticate(email, password)
 
-user_view.display_user(current_user)
+if current_user is None:
+    print("Authentification échouée.")
+else:
+    users = user_service.list_users()
+    user_view.display_users_list(users)
