@@ -57,6 +57,3 @@ class ContractRepository:
             select(Contract).where(Contract.remaining_amount > 0)
         ).all()
         return contracts
-
-    def get_contracts_for_commercial_clients(self):
-        pass

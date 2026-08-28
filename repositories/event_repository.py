@@ -67,13 +67,13 @@ class EventRepository:
         self.session.commit()
 
     def get_events_without_support(self):
-        pass
+        events = self.session.scalars(
+            select(Event).where(Event.support_id.is_(None))
+        ).all()
+        return events
 
-    def get_events_by_support_id(self):
-        pass
-
-    def get_upcoming_events(self):
-        pass
-
-    def search_events_by_client_or_contract(self):
-        pass
+    def get_events_by_support_id(self, support_id):
+        events = self.session.scalars(
+            select(Event).where(Event.support_id == support_id)
+        ).all()
+        return events
