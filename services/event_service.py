@@ -1,6 +1,7 @@
 from models.event import Event
 from repositories.event_repository import EventRepository
 from repositories.contract_repository import ContractRepository
+from repositories.user_repository import UserRepository
 from permissions.permission import commercial_required, gestion_required, owner_required
 
 get_event_owner_id = lambda event, *a, **kw: event.support_id
@@ -8,9 +9,15 @@ get_event_owner_id = lambda event, *a, **kw: event.support_id
 
 class EventService:
 
-    def __init__(self, repository: EventRepository, contract_repository: ContractRepository):
+    def __init__(
+        self,
+        repository: EventRepository,
+        contract_repository: ContractRepository,
+        user_repository: UserRepository,
+    ):
         self.repository = repository
         self.contract_repository = contract_repository
+        self.user_repository = user_repository
 
     @commercial_required
     def create_event(
@@ -42,8 +49,9 @@ class EventService:
         return event
 
     @gestion_required
-    def assign_support(self, current_user, event, support_id):
-        self.repository.update_support_id(event, support_id)
+    def assign_support(self, current_user, event, support_email):
+        support = self.user_repository.get_by_email(support_email)
+        self.repository.update_support_id(event, support.id)
         return event
 
     def list_events(self):
