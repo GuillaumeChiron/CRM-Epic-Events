@@ -1,6 +1,5 @@
 from models.event import Event
 from repositories.event_repository import EventRepository
-from repositories.user_repository import UserRepository
 
 
 class EventService:
@@ -17,11 +16,7 @@ class EventService:
         attendees,
         notes,
         contract_id,
-        support_email,
     ):
-
-        support = UserRepository().get_by_email(support_email)
-
         event = Event(
             event_name=event_name,
             contract_id=contract_id,
@@ -30,6 +25,9 @@ class EventService:
             location=location,
             attendees=attendees,
             notes=notes,
-            suuport_id=support.id,
         )
-        return self.repository.create(event)
+        self.repository.create(event)
+        return event
+
+    def assign_support(self, event, support_id):
+        self.repository.update_support_id(event, support_id)

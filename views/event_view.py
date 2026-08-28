@@ -12,7 +12,6 @@ class EventView:
         attendees = input("nombre de participants: ")
         notes = input("notes: ")
         contract_id = input("identifiant du contract: ")
-        support_email = input("email du support associé: ")
 
         return (
             event_name,
@@ -22,10 +21,9 @@ class EventView:
             location,
             attendees,
             notes,
-            support_email,
         )
 
-    def display_contract(self, event: Event):
+    def display_event(self, event: Event):
         print(
             f"{event.event_name}\n"
             f"début: {event.date_start} / fin: {event.date_end}\n"

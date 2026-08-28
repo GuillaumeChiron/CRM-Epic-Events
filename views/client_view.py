@@ -9,8 +9,7 @@ class ClientView:
         email = input("email: ")
         phone = input("telephone: ")
         company = input("nom de l'entreprise: ")
-        commercial_email = input("email commercial associé: ")
-        return first_name, last_name, email, phone, company, commercial_email
+        return first_name, last_name, email, phone, company
 
     def display_client(self, client: Client):
         print(

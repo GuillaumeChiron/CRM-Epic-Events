@@ -20,14 +20,14 @@ class ClientRepository:
 
     def get_by_last_name(self, last_name):
         client = self.session.scalars(
-            select(Client).where(Client.last_name == last_name).first()
-        )
+            select(Client).where(Client.last_name == last_name)
+        ).first()
         return client
 
     def get_by_email(self, email):
-        client = self.session.scarlars(
-            select(Client).where(Client.email == email).first()
-        )
+        client = self.session.scalars(
+            select(Client).where(Client.email == email)
+        ).first()
         return client
 
     def client_list(self):

@@ -24,7 +24,7 @@ class Contract(Base):
     total_amount: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     remaining_amount: Mapped[Decimal] = mapped_column(
         Numeric(10, 2),
-        CheckConstraint("remaing_amount >= 0 AND remaining_amount <= total_amount"),
+        CheckConstraint("remaining_amount >= 0 AND remaining_amount <= total_amount"),
         nullable=False,
     )
     created_at: Mapped[datetime] = mapped_column(
