@@ -51,6 +51,8 @@ class EventService:
     @gestion_required
     def assign_support(self, current_user, event, support_email):
         support = self.user_repository.get_by_email(support_email)
+        if support is None:
+            return None
         self.repository.update_support_id(event, support.id)
         return event
 

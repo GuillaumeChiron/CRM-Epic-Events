@@ -50,6 +50,17 @@ class TestCreateContract:
         assert result is False
         repository.create.assert_not_called()
 
+    def test_unknown_client_email_returns_none(self, service, repository, client_repository):
+        current_user = build_user(role=UserRole.gestion)
+        client_repository.get_by_email.return_value = None
+
+        result = service.create_contract(
+            current_user, Decimal("1000.00"), Decimal("1000.00"), "unknown@example.com"
+        )
+
+        assert result is None
+        repository.create.assert_not_called()
+
 
 def test_list_contracts_delegates(service, repository):
     repository.contract_list.return_value = ["c1"]

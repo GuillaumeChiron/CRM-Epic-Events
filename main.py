@@ -1,6 +1,4 @@
-from database.database import SessionLocal
-from models.user import User
-from repositories.user_repository import UserRepository
-from services.user_service import UserService
+from cli.main import cli
 
-session = SessionLocal()
+if __name__ == "__main__":
+    cli()

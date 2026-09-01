@@ -40,7 +40,7 @@ def test_display_user_prints_expected_format(capsys):
     assert "a@b.com" in captured.out
 
 
-def test_display_users_list_prints_separator_between_entries(capsys):
+def test_display_users_list_prints_a_row_per_user(capsys):
     view = UserView()
     users = [
         User(email="a@b.com", password_hash="h", first_name="A", last_name="B", role=UserRole.commercial),
@@ -50,4 +50,5 @@ def test_display_users_list_prints_separator_between_entries(capsys):
     view.display_users_list(users)
 
     captured = capsys.readouterr()
-    assert captured.out.count("---") == 2
+    assert "a@b.com" in captured.out
+    assert "c@d.com" in captured.out

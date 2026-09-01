@@ -15,6 +15,8 @@ class ContractService:
     @gestion_required
     def create_contract(self, current_user, total_amount, remaining_amount, client_email):
         client = self.client_repository.get_by_email(client_email)
+        if client is None:
+            return None
 
         contract = Contract(
             total_amount=total_amount,

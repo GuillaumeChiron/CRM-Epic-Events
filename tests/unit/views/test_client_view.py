@@ -41,7 +41,7 @@ def test_display_client_prints_expected_fields(capsys):
     assert "ACME" in captured.out
 
 
-def test_display_clients_list_prints_separator_between_entries(capsys):
+def test_display_clients_list_prints_a_row_per_client(capsys):
     view = ClientView()
     clients = [
         Client(first_name="A", last_name="B", email="a@b.com", phone="1", company="C1"),
@@ -51,4 +51,5 @@ def test_display_clients_list_prints_separator_between_entries(capsys):
     view.display_clients_list(clients)
 
     captured = capsys.readouterr()
-    assert captured.out.count("---") == 2
+    assert "a@b.com" in captured.out
+    assert "c@d.com" in captured.out
