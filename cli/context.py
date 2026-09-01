@@ -78,9 +78,10 @@ def require_login(ctx: click.Context) -> AppContext:
     return app_ctx
 
 
-def resolve_or_exit(app_ctx: AppContext, repository, entity_id: str, label: str):
+def resolve_or_exit(app_ctx: AppContext, repository, value: str, label: str, lookup: str = "id"):
+    method = repository.get_by_id if lookup == "id" else repository.get_by_email
     try:
-        entity = repository.get_by_id(entity_id)
+        entity = method(value)
     except ValueError:
         entity = None
 

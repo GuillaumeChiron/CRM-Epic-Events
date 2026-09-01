@@ -46,12 +46,14 @@ def list_(ctx: click.Context):
 
 
 @user.command("update")
-@click.argument("user_id")
+@click.argument("email")
 @click.pass_context
-def update(ctx: click.Context, user_id: str):
+def update(ctx: click.Context, email: str):
     """Mettre a jour un collaborateur (equipe de gestion)."""
     app_ctx = require_login(ctx)
-    target = resolve_or_exit(app_ctx, app_ctx.user_repository, user_id, "Collaborateur")
+    target = resolve_or_exit(
+        app_ctx, app_ctx.user_repository, email, "Collaborateur", lookup="email"
+    )
 
     while True:
         field = Prompt.ask("Champ a modifier", choices=list(FIELD_HANDLERS.keys()))
@@ -71,12 +73,14 @@ def update(ctx: click.Context, user_id: str):
 
 
 @user.command("delete")
-@click.argument("user_id")
+@click.argument("email")
 @click.pass_context
-def delete(ctx: click.Context, user_id: str):
+def delete(ctx: click.Context, email: str):
     """Supprimer un collaborateur (equipe de gestion)."""
     app_ctx = require_login(ctx)
-    target = resolve_or_exit(app_ctx, app_ctx.user_repository, user_id, "Collaborateur")
+    target = resolve_or_exit(
+        app_ctx, app_ctx.user_repository, email, "Collaborateur", lookup="email"
+    )
 
     if not Confirm.ask(
         f"Confirmer la suppression de {target.first_name} {target.last_name} ?",

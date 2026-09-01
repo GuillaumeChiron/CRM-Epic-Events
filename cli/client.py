@@ -47,12 +47,14 @@ def list_(ctx: click.Context):
 
 
 @client.command("update")
-@click.argument("client_id")
+@click.argument("email")
 @click.pass_context
-def update(ctx: click.Context, client_id: str):
+def update(ctx: click.Context, email: str):
     """Mettre a jour un client (uniquement le commercial qui en est responsable)."""
     app_ctx = require_login(ctx)
-    target = resolve_or_exit(app_ctx, app_ctx.client_repository, client_id, "Client")
+    target = resolve_or_exit(
+        app_ctx, app_ctx.client_repository, email, "Client", lookup="email"
+    )
 
     while True:
         field = Prompt.ask("Champ a modifier", choices=list(FIELD_HANDLERS.keys()))

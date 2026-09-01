@@ -74,7 +74,7 @@ def test_update_client_by_owner_commercial_succeeds(cli_runner, cli_persist):
 
     result = cli_runner.invoke(
         cli,
-        ["client", "update", str(owned_client.id)],
+        ["client", "update", owned_client.email],
         input="email\nmarie.curie@example.com\nn\n",
     )
 
@@ -99,7 +99,7 @@ def test_update_client_by_non_owner_commercial_is_denied(cli_runner, cli_persist
 
     result = cli_runner.invoke(
         cli,
-        ["client", "update", str(owned_client.id)],
+        ["client", "update", owned_client.email],
         input="email\nmarie.curie@example.com\n",
     )
 
@@ -107,11 +107,11 @@ def test_update_client_by_non_owner_commercial_is_denied(cli_runner, cli_persist
     assert "Acces refuse" in result.output
 
 
-def test_update_client_with_unknown_id_shows_not_found(cli_runner, cli_persist):
+def test_update_client_with_unknown_email_shows_not_found(cli_runner, cli_persist):
     commercial = cli_persist(build_user(role=UserRole.commercial, email="c@example.com"))
     login_as(commercial)
 
-    result = cli_runner.invoke(cli, ["client", "update", "00000000-0000-0000-0000-000000000000"])
+    result = cli_runner.invoke(cli, ["client", "update", "missing@example.com"])
 
     assert result.exit_code == 1
     assert "introuvable" in result.output
