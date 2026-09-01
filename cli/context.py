@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 import click
+import sentry_sdk
 from rich.console import Console
 
 from cli import session
@@ -42,6 +43,15 @@ def build_context() -> AppContext:
 
     user_id = session.read_current_user_id()
     current_user = user_repository.get_by_id(str(user_id)) if user_id else None
+
+    if current_user is not None:
+        sentry_sdk.set_user(
+            {
+                "id": str(current_user.id),
+                "email": current_user.email,
+                "username": current_user.role.name,
+            }
+        )
 
     return AppContext(
         db_session=db_session,

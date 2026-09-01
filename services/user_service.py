@@ -1,3 +1,4 @@
+import sentry_sdk
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 
@@ -6,6 +7,10 @@ from repositories.user_repository import UserRepository
 from permissions.permission import gestion_required
 
 ph = PasswordHasher()
+
+
+def _log_user_event(action, user):
+    sentry_sdk.capture_message(f"Collaborateur {action} : {user.email}", level="info")
 
 
 class UserService:
@@ -24,6 +29,7 @@ class UserService:
             role=role,
         )
         self.repository.create(user)
+        _log_user_event("cree", user)
         return user
 
     def authenticate(self, email, password):
@@ -44,27 +50,32 @@ class UserService:
     @gestion_required
     def update_email(self, current_user, user, email):
         self.repository.update_email(user, email)
+        _log_user_event("modifie", user)
         return user
 
     @gestion_required
     def update_password(self, current_user, user, password):
         password_hash = ph.hash(password)
         self.repository.update_password(user, password_hash)
+        _log_user_event("modifie", user)
         return user
 
     @gestion_required
     def update_first_name(self, current_user, user, first_name):
         self.repository.update_first_name(user, first_name)
+        _log_user_event("modifie", user)
         return user
 
     @gestion_required
     def update_last_name(self, current_user, user, last_name):
         self.repository.update_last_name(user, last_name)
+        _log_user_event("modifie", user)
         return user
 
     @gestion_required
     def update_role(self, current_user, user, role):
         self.repository.update_role(user, role)
+        _log_user_event("modifie", user)
         return user
 
     @gestion_required

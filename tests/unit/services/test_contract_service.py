@@ -113,3 +113,38 @@ class TestOwnerOrGestionActions:
 
         assert result is False
         getattr(repository, method).assert_not_called()
+
+
+class TestContractSignedSentryLogging:
+    def test_signing_contract_logs_to_sentry(self, service, repository, monkeypatch):
+        mock_capture = MagicMock()
+        monkeypatch.setattr("sentry_sdk.capture_message", mock_capture)
+        current_user = build_user(role=UserRole.gestion)
+        contract = build_contract()
+
+        service.update_signed(current_user, contract, True)
+
+        mock_capture.assert_called_once_with(
+            f"Contrat signe : {contract.id}", level="info"
+        )
+
+    def test_unsigning_contract_does_not_log_to_sentry(self, service, repository, monkeypatch):
+        mock_capture = MagicMock()
+        monkeypatch.setattr("sentry_sdk.capture_message", mock_capture)
+        current_user = build_user(role=UserRole.gestion)
+        contract = build_contract()
+
+        service.update_signed(current_user, contract, False)
+
+        mock_capture.assert_not_called()
+
+    def test_denied_signature_does_not_log_to_sentry(self, service, repository, monkeypatch):
+        mock_capture = MagicMock()
+        monkeypatch.setattr("sentry_sdk.capture_message", mock_capture)
+        current_user = build_user(role=UserRole.commercial)
+        other_client = build_client(commercial_id=uuid4())
+        contract = build_contract(client=other_client)
+
+        service.update_signed(current_user, contract, True)
+
+        mock_capture.assert_not_called()

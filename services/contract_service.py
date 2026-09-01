@@ -1,3 +1,5 @@
+import sentry_sdk
+
 from models.contract import Contract
 from repositories.contract_repository import ContractRepository
 from repositories.client_repository import ClientRepository
@@ -48,4 +50,6 @@ class ContractService:
     @owner_required(get_contract_owner_id, "gestion")
     def update_signed(self, current_user, contract, signed):
         self.repository.update_signed(contract, signed)
+        if signed:
+            sentry_sdk.capture_message(f"Contrat signe : {contract.id}", level="info")
         return contract
