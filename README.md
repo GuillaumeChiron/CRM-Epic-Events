@@ -84,7 +84,7 @@ python main.py --help
 |---|---|---|
 | `client create` | Creer un client (auto-associe au commercial connecte) | commercial |
 | `client list` | Lister tous les clients | tous (lecture seule) |
-| `client update <client_id>` | Modifier un client | commercial responsable du client |
+| `client update <email>` | Modifier un client | commercial responsable du client |
 
 ### Contrats (`contract`)
 
@@ -109,8 +109,8 @@ python main.py --help
 |---|---|---|
 | `user create` | Creer un collaborateur | gestion |
 | `user list` | Lister tous les collaborateurs | tous (lecture seule) |
-| `user update <user_id>` | Modifier un collaborateur | gestion |
-| `user delete <user_id>` | Supprimer un collaborateur | gestion |
+| `user update <email>` | Modifier un collaborateur | gestion |
+| `user delete <email>` | Supprimer un collaborateur | gestion |
 
 Les commandes `update` proposent un menu interactif (choix du champ a
 modifier), avec possibilite d'enchainer plusieurs modifications avant de
