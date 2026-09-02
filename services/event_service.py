@@ -26,6 +26,7 @@ class EventService:
         self.contract_repository = contract_repository
         self.user_repository = user_repository
 
+    # Créer et retourne une instance de Event
     @commercial_required
     def create_event(
         self,
@@ -55,6 +56,7 @@ class EventService:
         self.repository.create(event)
         return event
 
+    # Assigne un support a un evenement
     @gestion_required
     def assign_support(
         self, current_user: User, event: Event, support_email: str
@@ -65,15 +67,19 @@ class EventService:
         self.repository.update_support_id(event, support.id)
         return event
 
+    # Retourne tous les evenements
     def list_events(self) -> Sequence[Event]:
         return self.repository.event_list()
 
+    # Retourne tous les evnements sans support
     def list_events_without_support(self) -> Sequence[Event]:
         return self.repository.get_events_without_support()
 
+    # Retourne tous les evenements d'un support
     def list_my_events(self, current_user: User) -> Sequence[Event]:
         return self.repository.get_events_by_support_id(current_user.id)
 
+    # Retourne un Event avec les modifications effectuées
     @owner_required(get_event_owner_id)
     def update_event_name(
         self, current_user: User, event: Event, event_name: str

@@ -11,19 +11,23 @@ class EventRepository:
     def __init__(self, session):
         self.session = session
 
+    # Création d'un evenement dans la base de données
     def create(self, event: Event):
         self.session.add(event)
         self.session.commit()
         self.session.refresh(event)
 
+    # Retourne un evenement de la base de données par uuid
     def get_by_id(self, event_id: str) -> Event:
         event = self.session.get(Event, UUID(event_id))
         return event
 
+    # Retourne tous les evenements de la base de données
     def event_list(self) -> Sequence[Event]:
         events = self.session.scalars(select(Event)).all()
         return events
 
+    # Modification des attributs d'un evenement dans la base de données
     def update_event_name(self, event: Event, event_name: str):
         event.event_name = event_name
         self.session.commit()
@@ -64,16 +68,19 @@ class EventRepository:
         self.session.commit()
         self.session.refresh(event)
 
+    # Suppression d'un evenement dans la base de données
     def delete(self, event: Event):
         self.session.delete(event)
         self.session.commit()
 
+    # Retourne tous les evenement sans support de la base de données
     def get_events_without_support(self) -> Sequence[Event]:
         events = self.session.scalars(
             select(Event).where(Event.support_id.is_(None))
         ).all()
         return events
 
+    # Retourne tous les evenements d'un support de la base de données
     def get_events_by_support_id(self, support_id) -> Sequence[Event]:
         events = self.session.scalars(
             select(Event).where(Event.support_id == support_id)

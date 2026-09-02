@@ -15,6 +15,7 @@ class ClientService:
     def __init__(self, repository: ClientRepository):
         self.repository = repository
 
+    # Créer et retourne une instance de Client
     @commercial_required
     def create_client(
         self,
@@ -36,9 +37,11 @@ class ClientService:
         self.repository.create(client)
         return client
 
+    # Rtourne la liste de tous les clients
     def list_clients(self):
         return self.repository.client_list()
 
+    # rtourne un Client avec les modifications effectuées
     @owner_required(get_client_owner_id)
     def update_first_name(
         self, current_user: User, client: Client, first_name: str

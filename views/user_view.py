@@ -14,9 +14,11 @@ class UserView:
     def __init__(self, console: Console | None = None):
         self.console = console or Console()
 
+    # Demande un role au user
     def _prompt_role(self, prompt="role (gestion, commercial, support)") -> str:
         return Prompt.ask(prompt, choices=list(self.VALID_ROLES))
 
+    # Demande les attributs d'un user au user
     def create_user(self) -> tuple[str, str, str, str, str]:
         email = Prompt.ask("email")
         password = Prompt.ask("mot de passe")
@@ -25,11 +27,13 @@ class UserView:
         role = self._prompt_role()
         return email, password, first_name, last_name, role
 
+    # Demande les logs d'un user (email, password)
     def login(self) -> tuple[str, str]:
         email = Prompt.ask("email")
         password = Prompt.ask("mot de passe")
         return email, password
 
+    # Affiche un user
     def display_user(self, user: User):
         self.console.print(
             Panel(
@@ -38,6 +42,7 @@ class UserView:
             )
         )
 
+    # Affiche sous forme d'un tableau tous les users
     def display_users_list(self, users: Sequence[User]):
         table = Table(title="Collaborateurs")
         table.add_column("Prenom")
@@ -50,6 +55,7 @@ class UserView:
 
         self.console.print(table)
 
+    # Demande le nouvel attribut au user pour une modification user
     def update_email(self) -> str:
         return Prompt.ask("nouvel email")
 

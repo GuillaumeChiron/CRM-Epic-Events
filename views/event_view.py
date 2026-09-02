@@ -15,6 +15,7 @@ class EventView:
     def __init__(self, console: Console | None = None):
         self.console = console or Console()
 
+    # Demande une date au user
     def _prompt_datetime(self, prompt: str) -> datetime:
         raw = Prompt.ask(prompt)
         while True:
@@ -26,9 +27,11 @@ class EventView:
                 )
                 raw = Prompt.ask(prompt)
 
+    # Demande un nombre au user
     def _prompt_int(self, prompt: str) -> int:
         return IntPrompt.ask(prompt)
 
+    # Demande les attributs de l'evenement au user
     def create_event(self) -> tuple[str, UUID, datetime, datetime, str, int, str]:
         event_name = Prompt.ask("nom de l'evenement")
         date_start = self._prompt_datetime("date de debut (JJ/MM/AAAA HH:MM)")
@@ -48,9 +51,11 @@ class EventView:
             notes,
         )
 
+    # Demande l'email du support associé au user
     def prompt_support_email(self) -> str:
         return Prompt.ask("email du support a assigner")
 
+    # Affiche un evenement
     def display_event(self, event: Event):
         body = (
             f"Debut : {event.date_start} / Fin : {event.date_end}\n"
@@ -60,6 +65,7 @@ class EventView:
         )
         self.console.print(Panel(body, title=event.event_name))
 
+    # Affiche sous forme d'un tableau tous les evenements
     def display_events_list(self, events: Sequence[Event]):
         table = Table(title="Evenements")
         table.add_column("Nom")
@@ -85,6 +91,7 @@ class EventView:
 
         self.console.print(table)
 
+    # Demande le nouvel attribut au user pour une modification evenement
     def update_event_name(self) -> str:
         return Prompt.ask("nouveau nom de l'evenement")
 

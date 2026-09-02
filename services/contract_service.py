@@ -22,6 +22,7 @@ class ContractService:
         self.repository = repository
         self.client_repository = client_repository
 
+    # Créer et retourne une instance de Contract
     @gestion_required
     def create_contract(
         self,
@@ -42,15 +43,19 @@ class ContractService:
         self.repository.create(contract)
         return contract
 
+    # Rtourne tous les contrats
     def list_contracts(self) -> Sequence[Contract]:
         return self.repository.contract_list()
 
+    # Retourne tous les contrats non signés
     def list_unsigned_contracts(self) -> Sequence[Contract]:
         return self.repository.unsigned()
 
+    # Retourne tous les contrats avec un reste à payer
     def list_contracts_with_remaining_amount(self) -> Sequence[Contract]:
         return self.repository.remaining_amount()
 
+    # Retourne un Contract avec les modifications effectuées
     @owner_required(get_contract_owner_id, "gestion")
     def update_total_amount(
         self, current_user: User, contract: Contract, total_amount: Decimal

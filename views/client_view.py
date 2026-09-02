@@ -14,6 +14,7 @@ class ClientView:
     def __init__(self, console: Console | None = None):
         self.console = console or Console()
 
+    # Demande une date au user
     def _prompt_date(self, prompt: str) -> datetime:
         raw = Prompt.ask(prompt)
         while True:
@@ -25,6 +26,7 @@ class ClientView:
                 )
                 raw = Prompt.ask(prompt)
 
+    # Demande les attributs du client au user
     def create_client(self) -> tuple[str, str, str, str, str]:
         first_name = Prompt.ask("prenom")
         last_name = Prompt.ask("nom")
@@ -33,6 +35,7 @@ class ClientView:
         company = Prompt.ask("nom de l'entreprise")
         return first_name, last_name, email, phone, company
 
+    # Affiche un client
     def display_client(self, client: Client):
         body = (
             f"Email : {client.email}\n"
@@ -41,6 +44,7 @@ class ClientView:
         )
         self.console.print(Panel(body, title=f"{client.first_name} {client.last_name}"))
 
+    # Affiche dans un tableau tous les clients
     def display_clients_list(self, clients: Sequence[Client]):
         table = Table(title="Clients")
         table.add_column("Prenom")
@@ -60,6 +64,7 @@ class ClientView:
 
         self.console.print(table)
 
+    # Demande le nouvel attribut au user pour une modification client
     def update_first_name(self) -> str:
         return Prompt.ask("nouveau prenom")
 

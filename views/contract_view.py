@@ -14,6 +14,7 @@ class ContractView:
     def __init__(self, console: Console | None = None):
         self.console = console or Console()
 
+    # Demande un montant au user
     def _prompt_decimal(self, prompt: Decimal) -> Decimal:
         raw = Prompt.ask(prompt)
         while True:
@@ -25,15 +26,18 @@ class ContractView:
                 )
                 raw = Prompt.ask(prompt)
 
+    # Demande d'une validation au user
     def _prompt_bool(self, prompt: str):
         return Confirm.ask(prompt, choices=["o", "n"])
 
+    # Demande les attributs du contrat au user
     def create_contract(self) -> tuple[Decimal, Decimal, str]:
         total_amount = self._prompt_decimal("montant total a payer")
         remaining_amount = self._prompt_decimal("montant restant a payer")
         client_email = Prompt.ask("email du client associe")
         return total_amount, remaining_amount, client_email
 
+    # Affiche un contrat
     def display_contract(self, contract: Contract):
         body = (
             f"Client : {contract.client.first_name} {contract.client.last_name} "
@@ -43,6 +47,7 @@ class ContractView:
         )
         self.console.print(Panel(body, title=f"Contrat {contract.id}"))
 
+    # Affiche dans un tableau tous les contrats
     def display_contracts_list(self, contracts: Sequence[Contract]):
         table = Table(title="Contrats")
         table.add_column("Client")
@@ -62,6 +67,7 @@ class ContractView:
 
         self.console.print(table)
 
+    # Demande le nouvel attribut au user pour une modification contrat
     def update_total_amount(self) -> str:
         return self._prompt_decimal("nouveau montant total")
 

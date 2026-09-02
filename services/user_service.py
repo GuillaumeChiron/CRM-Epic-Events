@@ -20,6 +20,7 @@ class UserService:
     def __init__(self, repository: UserRepository):
         self.repository = repository
 
+    # Créer et retourne une instance de User
     @gestion_required
     def create_user(
         self,
@@ -42,6 +43,7 @@ class UserService:
         _log_user_event("cree", user)
         return user
 
+    # Authentifie un User: compare password avec celui en base de données
     def authenticate(self, email: str, password: str) -> User:
         user = self.repository.get_by_email(email)
 
@@ -57,6 +59,7 @@ class UserService:
     def list_users(self) -> Sequence[User]:
         return self.repository.users_list()
 
+    # Retourne un User avec les modifications effectuées
     @gestion_required
     def update_email(self, current_user: User, user: User, email: str) -> User:
         self.repository.update_email(user, email)
@@ -90,6 +93,7 @@ class UserService:
         _log_user_event("modifie", user)
         return user
 
+    # Supprime un User
     @gestion_required
     def delete_user(self, current_user: User, user: User):
         self.repository.delete_user(user)
