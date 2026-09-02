@@ -37,11 +37,16 @@ class ClientView:
 
     # Affiche un client
     def display_client(self, client: Client):
+        commercial = (
+            f"{client.commercial.first_name} {client.commercial.last_name}"
+            if client.commercial
+            else "Non assigné"
+        )
         body = (
             f"Email : {client.email}\n"
             f"Telephone : {client.phone}\n"
             f"Entreprise : {client.company}\n"
-            f"Commercial : {client.commercial.first_name} {client.commercial.last_name}"
+            f"Commercial : {commercial}"
         )
         self.console.print(Panel(body, title=f"{client.first_name} {client.last_name}"))
 
@@ -56,13 +61,18 @@ class ClientView:
         table.add_column("Commercial")
 
         for client in clients:
+            commercial = (
+                f"{client.commercial.first_name} {client.commercial.last_name}"
+                if client.commercial
+                else "Non assigné"
+            )
             table.add_row(
                 client.first_name,
                 client.last_name,
                 client.email,
                 client.phone,
                 client.company,
-                f"{client.commercial.first_name} {client.commercial.last_name}",
+                commercial,
             )
 
         self.console.print(table)
