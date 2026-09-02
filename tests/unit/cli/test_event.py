@@ -114,7 +114,7 @@ def test_list_events_without_support(cli_runner, cli_persist):
 def test_assign_support_as_gestion_succeeds(cli_runner, cli_persist):
     gestion = cli_persist(build_user(role=UserRole.gestion, email="g@example.com"))
     commercial = cli_persist(build_user(role=UserRole.commercial, email="c@example.com"))
-    support = cli_persist(build_user(role=UserRole.support, email="support@example.com"))
+    cli_persist(build_user(role=UserRole.support, email="support@example.com"))
     contract = make_signed_contract(cli_persist, commercial.id)
     target_event = cli_persist(
         Event(

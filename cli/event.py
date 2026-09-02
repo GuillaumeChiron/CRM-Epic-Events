@@ -1,7 +1,7 @@
 import click
 from rich.prompt import Confirm, Prompt
 
-from cli.context import AppContext, deny_if_false, require_login, resolve_or_exit
+from cli.context import deny_if_false, require_login, resolve_or_exit
 from views.event_view import EventView
 
 view = EventView()
@@ -56,7 +56,9 @@ def create(ctx: click.Context):
 
 @event.command("list")
 @click.option("--no-support", is_flag=True, help="N'afficher que les evenements sans support.")
-@click.option("--mine", is_flag=True, help="N'afficher que les evenements dont je suis responsable.")
+@click.option(
+    "--mine", is_flag=True, help="N'afficher que les evenements dont je suis responsable."
+)
 @click.pass_context
 def list_(ctx: click.Context, no_support: bool, mine: bool):
     """Lister les evenements, avec filtres optionnels."""

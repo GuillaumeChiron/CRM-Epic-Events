@@ -4,7 +4,9 @@ from repositories.contract_repository import ContractRepository
 from repositories.user_repository import UserRepository
 from permissions.permission import commercial_required, gestion_required, owner_required
 
-get_event_owner_id = lambda event, *a, **kw: event.support_id
+
+def get_event_owner_id(event, *a, **kw):
+    return event.support_id
 
 
 class EventService:

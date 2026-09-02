@@ -31,7 +31,10 @@ class UserView:
 
     def display_user(self, user: User):
         self.console.print(
-            Panel(f"Email : {user.email}", title=f"{user.role.name}: {user.first_name} {user.last_name}")
+            Panel(
+                f"Email : {user.email}",
+                title=f"{user.role.name}: {user.first_name} {user.last_name}",
+            )
         )
 
     def display_users_list(self, users):

@@ -1,7 +1,7 @@
 import click
 from rich.prompt import Confirm, Prompt
 
-from cli.context import AppContext, deny_if_false, require_login, resolve_or_exit
+from cli.context import deny_if_false, require_login, resolve_or_exit
 from views.client_view import ClientView
 
 view = ClientView()

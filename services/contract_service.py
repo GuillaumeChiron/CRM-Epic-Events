@@ -5,7 +5,9 @@ from repositories.contract_repository import ContractRepository
 from repositories.client_repository import ClientRepository
 from permissions.permission import gestion_required, owner_required
 
-get_contract_owner_id = lambda contract, *a, **kw: contract.client.commercial_id
+
+def get_contract_owner_id(contract, *a, **kw):
+    return contract.client.commercial_id
 
 
 class ContractService:

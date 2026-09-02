@@ -6,6 +6,7 @@ cffi==2.1.1
 click==8.5.0
 colorama==0.4.6
 coverage==7.15.4
+flake8==7.3.0
 greenlet==3.5.4
 iniconfig==2.3.0
 Mako==1.4.1

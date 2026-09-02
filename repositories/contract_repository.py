@@ -48,7 +48,7 @@ class ContractRepository:
 
     def unsigned(self):
         contracts = self.session.scalars(
-            select(Contract).where(Contract.signed == False)
+            select(Contract).where(Contract.signed.is_(False))
         ).all()
         return contracts
 

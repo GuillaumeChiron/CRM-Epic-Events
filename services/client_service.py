@@ -2,7 +2,9 @@ from models.client import Client
 from repositories.client_repository import ClientRepository
 from permissions.permission import commercial_required, owner_required
 
-get_client_owner_id = lambda client, *a, **kw: client.commercial_id
+
+def get_client_owner_id(client, *a, **kw):
+    return client.commercial_id
 
 
 class ClientService:

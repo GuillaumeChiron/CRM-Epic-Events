@@ -43,8 +43,14 @@ def test_display_user_prints_expected_format(capsys):
 def test_display_users_list_prints_a_row_per_user(capsys):
     view = UserView()
     users = [
-        User(email="a@b.com", password_hash="h", first_name="A", last_name="B", role=UserRole.commercial),
-        User(email="c@d.com", password_hash="h", first_name="C", last_name="D", role=UserRole.gestion),
+        User(
+            email="a@b.com", password_hash="h", first_name="A", last_name="B",
+            role=UserRole.commercial,
+        ),
+        User(
+            email="c@d.com", password_hash="h", first_name="C", last_name="D",
+            role=UserRole.gestion,
+        ),
     ]
 
     view.display_users_list(users)
