@@ -48,6 +48,56 @@ par Alembic. Une fois `DATABASE_URL` configure dans `.env` :
 alembic upgrade head
 ```
 
+### Schema de la base de donnees
+
+```mermaid
+erDiagram
+    UTILISATEURS ||--o{ CLIENTS : "suit (commercial)"
+    UTILISATEURS ||--o{ EVENEMENTS : "assure (support)"
+    CLIENTS ||--o{ CONTRATS : possede
+    CONTRATS ||--o{ EVENEMENTS : genere
+
+    UTILISATEURS {
+        uuid id PK
+        string email
+        string password_hash
+        string first_name
+        string last_name
+        enum role
+        datetime created_at
+    }
+    CLIENTS {
+        uuid id PK
+        string first_name
+        string last_name
+        string email
+        string phone
+        string company
+        datetime created_at
+        datetime last_contact_at
+        uuid commercial_id FK
+    }
+    CONTRATS {
+        uuid id PK
+        decimal total_amount
+        decimal remaining_amount
+        datetime created_at
+        boolean signed
+        uuid client_id FK
+    }
+    EVENEMENTS {
+        uuid id PK
+        string event_name
+        uuid contract_id FK
+        datetime date_start
+        datetime date_end
+        string location
+        int attendees
+        text notes
+        uuid support_id FK
+    }
+```
+
 ## Creation du premier administrateur
 
 Le CRUD des collaborateurs (`python main.py user create`) necessite deja
