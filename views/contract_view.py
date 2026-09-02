@@ -6,6 +6,7 @@ from rich.prompt import Confirm, Prompt
 from rich.table import Table
 
 from models.contract import Contract
+from collections.abc import Sequence
 
 
 class ContractView:
@@ -13,19 +14,21 @@ class ContractView:
     def __init__(self, console: Console | None = None):
         self.console = console or Console()
 
-    def _prompt_decimal(self, prompt):
+    def _prompt_decimal(self, prompt: Decimal) -> Decimal:
         raw = Prompt.ask(prompt)
         while True:
             try:
                 return Decimal(raw)
             except InvalidOperation:
-                self.console.print("[red]Montant invalide, saisissez un nombre (ex: 1500.00)[/red]")
+                self.console.print(
+                    "[red]Montant invalide, saisissez un nombre (ex: 1500.00)[/red]"
+                )
                 raw = Prompt.ask(prompt)
 
-    def _prompt_bool(self, prompt):
+    def _prompt_bool(self, prompt: str):
         return Confirm.ask(prompt, choices=["o", "n"])
 
-    def create_contract(self):
+    def create_contract(self) -> tuple[Decimal, Decimal, str]:
         total_amount = self._prompt_decimal("montant total a payer")
         remaining_amount = self._prompt_decimal("montant restant a payer")
         client_email = Prompt.ask("email du client associe")
@@ -40,7 +43,7 @@ class ContractView:
         )
         self.console.print(Panel(body, title=f"Contrat {contract.id}"))
 
-    def display_contracts_list(self, contracts):
+    def display_contracts_list(self, contracts: Sequence[Contract]):
         table = Table(title="Contrats")
         table.add_column("Client")
         table.add_column("Entreprise")
@@ -59,11 +62,11 @@ class ContractView:
 
         self.console.print(table)
 
-    def update_total_amount(self):
+    def update_total_amount(self) -> str:
         return self._prompt_decimal("nouveau montant total")
 
-    def update_remaining_amount(self):
+    def update_remaining_amount(self) -> str:
         return self._prompt_decimal("nouveau montant restant")
 
-    def update_signed(self):
+    def update_signed(self) -> str:
         return self._prompt_bool("contrat signe ?")

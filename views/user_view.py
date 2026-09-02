@@ -4,6 +4,7 @@ from rich.prompt import Prompt
 from rich.table import Table
 
 from models.user import User
+from collections.abc import Sequence
 
 
 class UserView:
@@ -13,10 +14,10 @@ class UserView:
     def __init__(self, console: Console | None = None):
         self.console = console or Console()
 
-    def _prompt_role(self, prompt="role (gestion, commercial, support)"):
+    def _prompt_role(self, prompt="role (gestion, commercial, support)") -> str:
         return Prompt.ask(prompt, choices=list(self.VALID_ROLES))
 
-    def create_user(self):
+    def create_user(self) -> tuple[str, str, str, str, str]:
         email = Prompt.ask("email")
         password = Prompt.ask("mot de passe")
         first_name = Prompt.ask("prenom")
@@ -24,7 +25,7 @@ class UserView:
         role = self._prompt_role()
         return email, password, first_name, last_name, role
 
-    def login(self):
+    def login(self) -> tuple[str, str]:
         email = Prompt.ask("email")
         password = Prompt.ask("mot de passe")
         return email, password
@@ -37,7 +38,7 @@ class UserView:
             )
         )
 
-    def display_users_list(self, users):
+    def display_users_list(self, users: Sequence[User]):
         table = Table(title="Collaborateurs")
         table.add_column("Prenom")
         table.add_column("Nom")
@@ -49,17 +50,17 @@ class UserView:
 
         self.console.print(table)
 
-    def update_email(self):
+    def update_email(self) -> str:
         return Prompt.ask("nouvel email")
 
-    def update_password(self):
+    def update_password(self) -> str:
         return Prompt.ask("nouveau mot de passe")
 
-    def update_first_name(self):
+    def update_first_name(self) -> str:
         return Prompt.ask("nouveau prenom")
 
-    def update_last_name(self):
+    def update_last_name(self) -> str:
         return Prompt.ask("nouveau nom")
 
-    def update_role(self):
+    def update_role(self) -> str:
         return self._prompt_role("nouveau role (gestion, commercial, support)")

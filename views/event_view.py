@@ -6,6 +6,8 @@ from rich.prompt import IntPrompt, Prompt
 from rich.table import Table
 
 from models.event import Event
+from uuid import UUID
+from collections.abc import Sequence
 
 
 class EventView:
@@ -13,7 +15,7 @@ class EventView:
     def __init__(self, console: Console | None = None):
         self.console = console or Console()
 
-    def _prompt_datetime(self, prompt):
+    def _prompt_datetime(self, prompt: str) -> datetime:
         raw = Prompt.ask(prompt)
         while True:
             try:
@@ -24,10 +26,10 @@ class EventView:
                 )
                 raw = Prompt.ask(prompt)
 
-    def _prompt_int(self, prompt):
+    def _prompt_int(self, prompt: str) -> int:
         return IntPrompt.ask(prompt)
 
-    def create_event(self):
+    def create_event(self) -> tuple[str, UUID, datetime, datetime, str, int, str]:
         event_name = Prompt.ask("nom de l'evenement")
         date_start = self._prompt_datetime("date de debut (JJ/MM/AAAA HH:MM)")
         date_end = self._prompt_datetime("date de fin (JJ/MM/AAAA HH:MM)")
@@ -46,7 +48,7 @@ class EventView:
             notes,
         )
 
-    def prompt_support_email(self):
+    def prompt_support_email(self) -> str:
         return Prompt.ask("email du support a assigner")
 
     def display_event(self, event: Event):
@@ -58,7 +60,7 @@ class EventView:
         )
         self.console.print(Panel(body, title=event.event_name))
 
-    def display_events_list(self, events):
+    def display_events_list(self, events: Sequence[Event]):
         table = Table(title="Evenements")
         table.add_column("Nom")
         table.add_column("Debut")
@@ -74,25 +76,29 @@ class EventView:
                 str(event.date_end),
                 event.location,
                 str(event.attendees),
-                f"{event.support.first_name} {event.support.last_name}" if event.support else "-",
+                (
+                    f"{event.support.first_name} {event.support.last_name}"
+                    if event.support
+                    else "-"
+                ),
             )
 
         self.console.print(table)
 
-    def update_event_name(self):
+    def update_event_name(self) -> str:
         return Prompt.ask("nouveau nom de l'evenement")
 
-    def update_date_start(self):
+    def update_date_start(self) -> str:
         return self._prompt_datetime("nouvelle date de debut (JJ/MM/AAAA HH:MM)")
 
-    def update_date_end(self):
+    def update_date_end(self) -> str:
         return self._prompt_datetime("nouvelle date de fin (JJ/MM/AAAA HH:MM)")
 
-    def update_location(self):
+    def update_location(self) -> str:
         return Prompt.ask("nouveau lieu")
 
-    def update_attendees(self):
+    def update_attendees(self) -> str:
         return self._prompt_int("nouveau nombre de participants")
 
-    def update_notes(self):
+    def update_notes(self) -> str:
         return Prompt.ask("nouvelles notes")
