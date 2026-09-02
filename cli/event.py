@@ -74,6 +74,16 @@ def list_(ctx: click.Context, no_support: bool, mine: bool):
     view.display_events_list(events)
 
 
+@event.command("show")
+@click.argument("event_id")
+@click.pass_context
+def show(ctx: click.Context, event_id: str):
+    """Afficher le detail d'un evenement."""
+    app_ctx = require_login(ctx)
+    target = resolve_or_exit(app_ctx, app_ctx.event_repository, event_id, "Evenement")
+    view.display_event(target)
+
+
 @event.command("update")
 @click.argument("event_id")
 @click.pass_context

@@ -100,6 +100,7 @@ En cas d'echec d'authentification (email/mot de passe incorrect),
 |---|---|---|
 | `python main.py user create` | Creer un collaborateur | gestion |
 | `python main.py user list` | Lister tous les collaborateurs (prenom, nom, email, role) | tous (lecture seule) |
+| `python main.py user show <email>` | Afficher le detail d'un collaborateur | tous (lecture seule) |
 | `python main.py user update <email>` | Modifier un collaborateur existant | gestion |
 | `python main.py user delete <email>` | Supprimer un collaborateur (confirmation demandee) | gestion |
 
@@ -127,6 +128,7 @@ definitivement le collaborateur.
 |---|---|---|
 | `python main.py client create` | Creer un client, auto-associe au commercial connecte | commercial |
 | `python main.py client list` | Lister tous les clients (prenom, nom, email, telephone, entreprise) | tous (lecture seule) |
+| `python main.py client show <email>` | Afficher le detail d'un client | tous (lecture seule) |
 | `python main.py client update <email>` | Modifier un client existant | commercial responsable du client |
 
 **`client create`** demande : `prenom`, `nom`, `email`, `telephone`,
@@ -150,6 +152,7 @@ commercial actuellement connecte.
 |---|---|---|
 | `python main.py event create` | Creer un evenement pour un contrat signe de son propre client | commercial |
 | `python main.py event list [--no-support] [--mine]` | Lister les evenements | tous (lecture seule) |
+| `python main.py event show <event_id>` | Afficher le detail d'un evenement | tous (lecture seule) |
 | `python main.py event update <event_id>` | Modifier un evenement existant | support responsable de l'evenement |
 | `python main.py event assign-support <event_id>` | Associer un collaborateur support a un evenement | gestion |
 
@@ -187,6 +190,7 @@ correspond a aucun collaborateur.
 |---|---|---|
 | `python main.py contract create` | Creer un contrat pour un client existant | gestion |
 | `python main.py contract list [--unsigned] [--unpaid]` | Lister les contrats | tous (lecture seule) |
+| `python main.py contract show <contract_id>` | Afficher le detail d'un contrat | tous (lecture seule) |
 | `python main.py contract update <contract_id>` | Modifier un contrat (montants, signature) | gestion, ou commercial responsable du client |
 
 **`contract create`** demande : `montant total a payer`,

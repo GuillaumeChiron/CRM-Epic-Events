@@ -47,6 +47,27 @@ def test_list_users_shows_existing_users(cli_runner, cli_persist):
     assert "g@example.com" in result.output
 
 
+def test_show_user_displays_details(cli_runner, cli_persist):
+    gestion = cli_persist(build_user(role=UserRole.gestion, email="g@example.com"))
+    target = cli_persist(build_user(role=UserRole.support, email="s@example.com"))
+    login_as(gestion)
+
+    result = cli_runner.invoke(cli, ["user", "show", target.email])
+
+    assert result.exit_code == 0
+    assert "s@example.com" in result.output
+
+
+def test_show_user_with_unknown_email_shows_not_found(cli_runner, cli_persist):
+    gestion = cli_persist(build_user(role=UserRole.gestion, email="g@example.com"))
+    login_as(gestion)
+
+    result = cli_runner.invoke(cli, ["user", "show", "missing@example.com"])
+
+    assert result.exit_code == 1
+    assert "introuvable" in result.output
+
+
 def test_update_user_role_as_gestion_succeeds(cli_runner, cli_persist):
     gestion = cli_persist(build_user(role=UserRole.gestion, email="g@example.com"))
     target = cli_persist(build_user(role=UserRole.support, email="s@example.com"))

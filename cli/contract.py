@@ -58,6 +58,16 @@ def list_(ctx: click.Context, unsigned: bool, unpaid: bool):
     view.display_contracts_list(contracts)
 
 
+@contract.command("show")
+@click.argument("contract_id")
+@click.pass_context
+def show(ctx: click.Context, contract_id: str):
+    """Afficher le detail d'un contrat."""
+    app_ctx = require_login(ctx)
+    target = resolve_or_exit(app_ctx, app_ctx.contract_repository, contract_id, "Contrat")
+    view.display_contract(target)
+
+
 @contract.command("update")
 @click.argument("contract_id")
 @click.pass_context

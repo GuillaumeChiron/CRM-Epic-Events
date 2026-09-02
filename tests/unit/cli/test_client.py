@@ -58,6 +58,36 @@ def test_list_clients_shows_existing_clients(cli_runner, cli_persist):
     assert "marie@example.com" in result.output
 
 
+def test_show_client_displays_details(cli_runner, cli_persist):
+    commercial = cli_persist(build_user(role=UserRole.commercial, email="c@example.com"))
+    target = cli_persist(
+        Client(
+            first_name="Marie",
+            last_name="Curie",
+            email="marie@example.com",
+            phone="0600000000",
+            company="ACME",
+            commercial_id=commercial.id,
+        )
+    )
+    login_as(commercial)
+
+    result = cli_runner.invoke(cli, ["client", "show", target.email])
+
+    assert result.exit_code == 0
+    assert "marie@example.com" in result.output
+
+
+def test_show_client_with_unknown_email_shows_not_found(cli_runner, cli_persist):
+    commercial = cli_persist(build_user(role=UserRole.commercial, email="c@example.com"))
+    login_as(commercial)
+
+    result = cli_runner.invoke(cli, ["client", "show", "missing@example.com"])
+
+    assert result.exit_code == 1
+    assert "introuvable" in result.output
+
+
 def test_update_client_by_owner_commercial_succeeds(cli_runner, cli_persist):
     commercial = cli_persist(build_user(role=UserRole.commercial, email="c@example.com"))
     owned_client = cli_persist(

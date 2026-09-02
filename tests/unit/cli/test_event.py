@@ -183,6 +183,40 @@ def test_assign_support_as_commercial_is_denied(cli_runner, cli_persist):
     assert "Acces refuse" in result.output
 
 
+def test_show_event_displays_details(cli_runner, cli_persist):
+    gestion = cli_persist(build_user(role=UserRole.gestion, email="g@example.com"))
+    commercial = cli_persist(build_user(role=UserRole.commercial, email="c@example.com"))
+    contract = make_signed_contract(cli_persist, commercial.id)
+    target_event = cli_persist(
+        Event(
+            event_name="Mariage",
+            date_start=datetime(2026, 6, 1, 13, 0),
+            date_end=datetime(2026, 6, 2, 2, 0),
+            location="Paris",
+            attendees=75,
+            contract_id=contract.id,
+        )
+    )
+    login_as(gestion)
+
+    result = cli_runner.invoke(cli, ["event", "show", str(target_event.id)])
+
+    assert result.exit_code == 0
+    assert "Mariage" in result.output
+
+
+def test_show_event_with_unknown_id_shows_not_found(cli_runner, cli_persist):
+    gestion = cli_persist(build_user(role=UserRole.gestion, email="g@example.com"))
+    login_as(gestion)
+
+    result = cli_runner.invoke(
+        cli, ["event", "show", "00000000-0000-0000-0000-000000000000"]
+    )
+
+    assert result.exit_code == 1
+    assert "introuvable" in result.output
+
+
 def test_update_event_by_assigned_support_succeeds(cli_runner, cli_persist):
     commercial = cli_persist(build_user(role=UserRole.commercial, email="c@example.com"))
     support = cli_persist(build_user(role=UserRole.support, email="support@example.com"))

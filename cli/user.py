@@ -45,6 +45,18 @@ def list_(ctx: click.Context):
     view.display_users_list(app_ctx.user_service.list_users())
 
 
+@user.command("show")
+@click.argument("email")
+@click.pass_context
+def show(ctx: click.Context, email: str):
+    """Afficher le detail d'un collaborateur."""
+    app_ctx = require_login(ctx)
+    target = resolve_or_exit(
+        app_ctx, app_ctx.user_repository, email, "Collaborateur", lookup="email"
+    )
+    view.display_user(target)
+
+
 @user.command("update")
 @click.argument("email")
 @click.pass_context

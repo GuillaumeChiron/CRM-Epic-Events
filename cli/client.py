@@ -46,6 +46,18 @@ def list_(ctx: click.Context):
     view.display_clients_list(app_ctx.client_service.list_clients())
 
 
+@client.command("show")
+@click.argument("email")
+@click.pass_context
+def show(ctx: click.Context, email: str):
+    """Afficher le detail d'un client."""
+    app_ctx = require_login(ctx)
+    target = resolve_or_exit(
+        app_ctx, app_ctx.client_repository, email, "Client", lookup="email"
+    )
+    view.display_client(target)
+
+
 @client.command("update")
 @click.argument("email")
 @click.pass_context

@@ -79,6 +79,37 @@ def test_list_unsigned_contracts_filters_correctly(cli_runner, cli_persist):
     assert "200" in result.output
 
 
+def test_show_contract_displays_details(cli_runner, cli_persist):
+    gestion = cli_persist(build_user(role=UserRole.gestion, email="g@example.com"))
+    commercial = cli_persist(build_user(role=UserRole.commercial, email="c@example.com"))
+    client_row = make_client(cli_persist, commercial.id)
+    contract_row = cli_persist(
+        Contract(
+            total_amount=Decimal("1000"), remaining_amount=Decimal("500"),
+            signed=False, client_id=client_row.id,
+        )
+    )
+    login_as(gestion)
+
+    result = cli_runner.invoke(cli, ["contract", "show", str(contract_row.id)])
+
+    assert result.exit_code == 0
+    assert str(contract_row.id) in result.output
+    assert "Marie Curie" in result.output
+
+
+def test_show_contract_with_unknown_id_shows_not_found(cli_runner, cli_persist):
+    gestion = cli_persist(build_user(role=UserRole.gestion, email="g@example.com"))
+    login_as(gestion)
+
+    result = cli_runner.invoke(
+        cli, ["contract", "show", "00000000-0000-0000-0000-000000000000"]
+    )
+
+    assert result.exit_code == 1
+    assert "introuvable" in result.output
+
+
 def test_update_contract_as_owning_commercial_succeeds(cli_runner, cli_persist):
     commercial = cli_persist(build_user(role=UserRole.commercial, email="c@example.com"))
     owned_client = make_client(cli_persist, commercial.id)
