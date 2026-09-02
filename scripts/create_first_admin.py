@@ -8,12 +8,11 @@ from models.user import User, UserRole
 ph = PasswordHasher()
 
 
-def create_first_admin(email, password, first_name, last_name, session_factory=SessionLocal):
-    """Cree le tout premier collaborateur (role gestion), sans passer par la CLI.
-
-    Refuse de s'executer si des collaborateurs existent deja, pour eviter
-    de contourner les permissions une fois l'application amorcee.
-    """
+# Créer le premier utilisateur avec le role gestion
+# Ne s'execute pas si des users existent deja en base de données
+def create_first_admin(
+    email, password, first_name, last_name, session_factory=SessionLocal
+):
     session = session_factory()
     try:
         if session.query(User).count() > 0:
