@@ -1,7 +1,7 @@
 import click
 from rich.prompt import Confirm, Prompt
 
-from cli.context import deny_if_false, require_login, resolve_or_exit
+from cli.context import deny_if_false, require_login, resolve_or_exit, select_from_list
 from views.contract_view import ContractView
 
 view = ContractView()
@@ -58,23 +58,32 @@ def list_(ctx: click.Context, unsigned: bool, unpaid: bool):
     view.display_contracts_list(contracts)
 
 
+def _resolve_contract(app_ctx, contract_id: str | None):
+    if contract_id:
+        return resolve_or_exit(app_ctx, app_ctx.contract_repository, contract_id, "Contrat")
+
+    contracts = app_ctx.contract_service.list_contracts()
+    view.display_contracts_list(contracts)
+    return select_from_list(app_ctx, contracts, "contrat")
+
+
 @contract.command("show")
-@click.argument("contract_id")
+@click.argument("contract_id", required=False)
 @click.pass_context
-def show(ctx: click.Context, contract_id: str):
-    """Afficher le detail d'un contrat."""
+def show(ctx: click.Context, contract_id: str | None):
+    """Afficher le detail d'un contrat (par id, ou par selection dans la liste)."""
     app_ctx = require_login(ctx)
-    target = resolve_or_exit(app_ctx, app_ctx.contract_repository, contract_id, "Contrat")
+    target = _resolve_contract(app_ctx, contract_id)
     view.display_contract(target)
 
 
 @contract.command("update")
-@click.argument("contract_id")
+@click.argument("contract_id", required=False)
 @click.pass_context
-def update(ctx: click.Context, contract_id: str):
+def update(ctx: click.Context, contract_id: str | None):
     """Mettre a jour un contrat (gestion, ou commercial responsable du client)."""
     app_ctx = require_login(ctx)
-    target = resolve_or_exit(app_ctx, app_ctx.contract_repository, contract_id, "Contrat")
+    target = _resolve_contract(app_ctx, contract_id)
 
     while True:
         field = Prompt.ask("Champ a modifier", choices=list(FIELD_HANDLERS.keys()))

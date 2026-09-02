@@ -1,7 +1,7 @@
 import click
 from rich.prompt import Confirm, Prompt
 
-from cli.context import deny_if_false, require_login, resolve_or_exit
+from cli.context import deny_if_false, require_login, resolve_or_exit, select_from_list
 from views.event_view import EventView
 
 view = EventView()
@@ -74,23 +74,32 @@ def list_(ctx: click.Context, no_support: bool, mine: bool):
     view.display_events_list(events)
 
 
+def _resolve_event(app_ctx, event_id: str | None):
+    if event_id:
+        return resolve_or_exit(app_ctx, app_ctx.event_repository, event_id, "Evenement")
+
+    events = app_ctx.event_service.list_events()
+    view.display_events_list(events)
+    return select_from_list(app_ctx, events, "evenement")
+
+
 @event.command("show")
-@click.argument("event_id")
+@click.argument("event_id", required=False)
 @click.pass_context
-def show(ctx: click.Context, event_id: str):
-    """Afficher le detail d'un evenement."""
+def show(ctx: click.Context, event_id: str | None):
+    """Afficher le detail d'un evenement (par id, ou par selection dans la liste)."""
     app_ctx = require_login(ctx)
-    target = resolve_or_exit(app_ctx, app_ctx.event_repository, event_id, "Evenement")
+    target = _resolve_event(app_ctx, event_id)
     view.display_event(target)
 
 
 @event.command("update")
-@click.argument("event_id")
+@click.argument("event_id", required=False)
 @click.pass_context
-def update(ctx: click.Context, event_id: str):
+def update(ctx: click.Context, event_id: str | None):
     """Mettre a jour un evenement (uniquement le support qui en est responsable)."""
     app_ctx = require_login(ctx)
-    target = resolve_or_exit(app_ctx, app_ctx.event_repository, event_id, "Evenement")
+    target = _resolve_event(app_ctx, event_id)
 
     while True:
         field = Prompt.ask("Champ a modifier", choices=list(FIELD_HANDLERS.keys()))
@@ -110,12 +119,12 @@ def update(ctx: click.Context, event_id: str):
 
 
 @event.command("assign-support")
-@click.argument("event_id")
+@click.argument("event_id", required=False)
 @click.pass_context
-def assign_support(ctx: click.Context, event_id: str):
+def assign_support(ctx: click.Context, event_id: str | None):
     """Associer un collaborateur support a un evenement (equipe de gestion)."""
     app_ctx = require_login(ctx)
-    target = resolve_or_exit(app_ctx, app_ctx.event_repository, event_id, "Evenement")
+    target = _resolve_event(app_ctx, event_id)
     support_email = view.prompt_support_email()
 
     updated = app_ctx.event_service.assign_support(app_ctx.current_user, target, support_email)

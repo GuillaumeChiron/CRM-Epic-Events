@@ -68,15 +68,17 @@ class EventView:
     # Affiche sous forme d'un tableau tous les evenements
     def display_events_list(self, events: Sequence[Event]):
         table = Table(title="Evenements")
-        table.add_column("Nom")
+        table.add_column("#", no_wrap=True)
+        table.add_column("Nom", no_wrap=True)
         table.add_column("Debut")
         table.add_column("Fin")
         table.add_column("Lieu")
         table.add_column("Participants")
         table.add_column("Support")
 
-        for event in events:
+        for index, event in enumerate(events, start=1):
             table.add_row(
+                str(index),
                 event.event_name,
                 str(event.date_start),
                 str(event.date_end),

@@ -50,14 +50,16 @@ class ContractView:
     # Affiche dans un tableau tous les contrats
     def display_contracts_list(self, contracts: Sequence[Contract]):
         table = Table(title="Contrats")
-        table.add_column("Client")
+        table.add_column("#", no_wrap=True)
+        table.add_column("Client", no_wrap=True)
         table.add_column("Entreprise")
         table.add_column("Signe")
         table.add_column("Reste a payer")
         table.add_column("Montant total")
 
-        for contract in contracts:
+        for index, contract in enumerate(contracts, start=1):
             table.add_row(
+                str(index),
                 f"{contract.client.first_name} {contract.client.last_name}",
                 contract.client.company,
                 "oui" if contract.signed else "non",

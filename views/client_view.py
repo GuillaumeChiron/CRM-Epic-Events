@@ -40,7 +40,8 @@ class ClientView:
         body = (
             f"Email : {client.email}\n"
             f"Telephone : {client.phone}\n"
-            f"Entreprise : {client.company}"
+            f"Entreprise : {client.company}\n"
+            f"Commercial : {client.commercial.first_name} {client.commercial.last_name}"
         )
         self.console.print(Panel(body, title=f"{client.first_name} {client.last_name}"))
 
@@ -52,6 +53,7 @@ class ClientView:
         table.add_column("Email")
         table.add_column("Telephone")
         table.add_column("Entreprise")
+        table.add_column("Commercial")
 
         for client in clients:
             table.add_row(
@@ -60,6 +62,7 @@ class ClientView:
                 client.email,
                 client.phone,
                 client.company,
+                f"{client.commercial.first_name} {client.commercial.last_name}",
             )
 
         self.console.print(table)

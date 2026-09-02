@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import click
 import sentry_sdk
 from rich.console import Console
+from rich.prompt import Prompt
 
 from cli import session
 from database.database import SessionLocal
@@ -89,6 +90,17 @@ def resolve_or_exit(app_ctx: AppContext, repository, value: str, label: str, loo
         app_ctx.console.print(f"[bold red]{label} introuvable.[/bold red]")
         raise click.exceptions.Exit(1)
     return entity
+
+
+def select_from_list(app_ctx: AppContext, items, label: str):
+    """Demande a l'utilisateur de choisir un element par son numero dans une liste deja affichee."""
+    if not items:
+        app_ctx.console.print(f"[bold red]Aucun {label} disponible.[/bold red]")
+        raise click.exceptions.Exit(1)
+
+    numbers = [str(i) for i in range(1, len(items) + 1)]
+    choice = Prompt.ask(f"Numero du {label}", choices=numbers)
+    return items[int(choice) - 1]
 
 
 def deny_if_false(app_ctx: AppContext, result):
