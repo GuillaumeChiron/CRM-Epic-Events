@@ -122,6 +122,18 @@ def test_assign_support_with_unknown_email_returns_none(service, repository, use
     repository.update_support_id.assert_not_called()
 
 
+def test_assign_support_with_non_support_role_returns_none(service, repository, user_repository):
+    current_user = build_user(role=UserRole.gestion)
+    event = build_event()
+    commercial = build_user(role=UserRole.commercial, email="commercial@example.com")
+    user_repository.get_by_email.return_value = commercial
+
+    result = service.assign_support(current_user, event, commercial.email)
+
+    assert result is None
+    repository.update_support_id.assert_not_called()
+
+
 def test_list_events_delegates(service, repository):
     repository.event_list.return_value = ["e1"]
     assert service.list_events() == ["e1"]

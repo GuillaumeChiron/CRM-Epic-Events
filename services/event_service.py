@@ -1,5 +1,5 @@
 from models.event import Event
-from models.user import User
+from models.user import User, UserRole
 from repositories.event_repository import EventRepository
 from repositories.contract_repository import ContractRepository
 from repositories.user_repository import UserRepository
@@ -62,7 +62,7 @@ class EventService:
         self, current_user: User, event: Event, support_email: str
     ) -> Event:
         support = self.user_repository.get_by_email(support_email)
-        if support is None:
+        if support is None or support.role != UserRole.support:
             return None
         self.repository.update_support_id(event, support.id)
         return event
