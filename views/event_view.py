@@ -61,7 +61,8 @@ class EventView:
             f"Debut : {event.date_start} / Fin : {event.date_end}\n"
             f"Lieu : {event.location}\n"
             f"Participants : {event.attendees}\n"
-            f"Notes : {event.notes}"
+            f"Notes : {event.notes}\n"
+            f"Support : {event.support.first_name} {event.support.last_name}"
         )
         self.console.print(Panel(body, title=event.event_name))
 
