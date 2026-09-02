@@ -68,53 +68,146 @@ doit ensuite passer par `python main.py user create` (une fois connecte).
 
 ```bash
 python main.py --help
+python main.py <groupe> --help        # ex: python main.py client --help
 ```
+
+La CLI est organisee en 5 groupes de commandes : `auth`, `user`, `client`,
+`contract`, `event`. Toutes les commandes (sauf `auth login`) necessitent
+une session active (`python main.py auth login`), sans quoi elles echouent
+avec `Vous devez etre connecte. Utilisez 'auth login'.` (code de sortie 1).
+
+Les commandes `update` (client, contrat, evenement, collaborateur)
+fonctionnent toutes de la meme facon : un menu interactif `Champ a
+modifier` propose la liste des champs modifiables, demande la nouvelle
+valeur puis affiche le resultat ; a la fin, `Modifier un autre champ ? [o/n]`
+permet d'enchainer plusieurs modifications avant de quitter. Un acces
+refuse affiche `Acces refuse.` et arrete la commande (code de sortie 1).
 
 ### Connexion (`auth`)
 
-| Commande | Description |
-|---|---|
-| `python main.py auth login` | Se connecter (email + mot de passe), ouvre une session locale valable 8h |
-| `python main.py auth whoami` | Afficher le collaborateur actuellement connecte |
-| `python main.py auth logout` | Fermer la session locale |
-
-### Clients (`client`)
-
 | Commande | Description | Role requis |
 |---|---|---|
-| `client create` | Creer un client (auto-associe au commercial connecte) | commercial |
-| `client list` | Lister tous les clients | tous (lecture seule) |
-| `client update <email>` | Modifier un client | commercial responsable du client |
+| `python main.py auth login` | Se connecter (demande `email` puis `mot de passe`), ouvre une session locale valable 8h | tous |
+| `python main.py auth whoami` | Afficher le collaborateur actuellement connecte (nom, prenom, role) | tous (connecte) |
+| `python main.py auth logout` | Fermer la session locale en cours | tous (connecte) |
 
-### Contrats (`contract`)
-
-| Commande | Description | Role requis |
-|---|---|---|
-| `contract create` | Creer un contrat pour un client existant | gestion |
-| `contract list [--unsigned] [--unpaid]` | Lister les contrats, filtres optionnels | tous (lecture seule) |
-| `contract update <contract_id>` | Modifier un contrat (montants, signature) | gestion, ou commercial responsable du client |
-
-### Evenements (`event`)
-
-| Commande | Description | Role requis |
-|---|---|---|
-| `event create` | Creer un evenement pour un contrat signe de son propre client | commercial |
-| `event list [--no-support] [--mine]` | Lister les evenements, filtres optionnels | tous (lecture seule) |
-| `event update <event_id>` | Modifier un evenement | support responsable de l'evenement |
-| `event assign-support <event_id>` | Associer un collaborateur support a un evenement | gestion |
+En cas d'echec d'authentification (email/mot de passe incorrect),
+`auth login` affiche `Authentification echouee.` et quitte avec le code 1.
 
 ### Collaborateurs (`user`)
 
 | Commande | Description | Role requis |
 |---|---|---|
-| `user create` | Creer un collaborateur | gestion |
-| `user list` | Lister tous les collaborateurs | tous (lecture seule) |
-| `user update <email>` | Modifier un collaborateur | gestion |
-| `user delete <email>` | Supprimer un collaborateur | gestion |
+| `python main.py user create` | Creer un collaborateur | gestion |
+| `python main.py user list` | Lister tous les collaborateurs (prenom, nom, email, role) | tous (lecture seule) |
+| `python main.py user update <email>` | Modifier un collaborateur existant | gestion |
+| `python main.py user delete <email>` | Supprimer un collaborateur (confirmation demandee) | gestion |
 
-Les commandes `update` proposent un menu interactif (choix du champ a
-modifier), avec possibilite d'enchainer plusieurs modifications avant de
-valider.
+**`user create`** demande successivement : `email`, `mot de passe`,
+`prenom`, `nom`, puis `role` (choix parmi `gestion`, `commercial`,
+`support`).
+
+**`user update <email>`** — champs modifiables (`Champ a modifier`) :
+
+| Champ | Valeur demandee |
+|---|---|
+| `email` | nouvel email |
+| `mot-de-passe` | nouveau mot de passe (rehache) |
+| `prenom` | nouveau prenom |
+| `nom` | nouveau nom |
+| `role` | nouveau role (`gestion`, `commercial`, `support`) |
+
+**`user delete <email>`** demande une confirmation
+(`Confirmer la suppression de <prenom> <nom> ?`) avant de supprimer
+definitivement le collaborateur.
+
+### Clients (`client`)
+
+| Commande | Description | Role requis |
+|---|---|---|
+| `python main.py client create` | Creer un client, auto-associe au commercial connecte | commercial |
+| `python main.py client list` | Lister tous les clients (prenom, nom, email, telephone, entreprise) | tous (lecture seule) |
+| `python main.py client update <email>` | Modifier un client existant | commercial responsable du client |
+
+**`client create`** demande : `prenom`, `nom`, `email`, `telephone`,
+`nom de l'entreprise`. Le client cree est automatiquement rattache au
+commercial actuellement connecte.
+
+**`client update <email>`** — champs modifiables :
+
+| Champ | Valeur demandee |
+|---|---|
+| `prenom` | nouveau prenom |
+| `nom` | nouveau nom |
+| `email` | nouvel email |
+| `telephone` | nouveau telephone |
+| `entreprise` | nouveau nom de l'entreprise |
+| `dernier-contact` | date du dernier contact, format `JJ/MM/AAAA` |
+
+### Evenements (`event`)
+
+| Commande | Description | Role requis |
+|---|---|---|
+| `python main.py event create` | Creer un evenement pour un contrat signe de son propre client | commercial |
+| `python main.py event list [--no-support] [--mine]` | Lister les evenements | tous (lecture seule) |
+| `python main.py event update <event_id>` | Modifier un evenement existant | support responsable de l'evenement |
+| `python main.py event assign-support <event_id>` | Associer un collaborateur support a un evenement | gestion |
+
+**`event create`** demande : `nom de l'evenement`, `date de debut`
+(`JJ/MM/AAAA HH:MM`), `date de fin` (`JJ/MM/AAAA HH:MM`), `lieu`,
+`nombre de participants`, `notes`, puis `identifiant du contract` (uuid).
+La creation echoue (`Contrat introuvable, non signe, ou non associe a
+ce commercial.`) si le contrat n'existe pas, n'est pas signe, ou
+n'appartient pas au commercial connecte.
+
+**`event list`** :
+- sans option : tous les evenements
+- `--no-support` : uniquement les evenements sans support assigne
+- `--mine` : uniquement les evenements dont le collaborateur connecte
+  (support) est responsable
+
+**`event update <event_id>`** — champs modifiables :
+
+| Champ | Valeur demandee |
+|---|---|
+| `nom` | nouveau nom de l'evenement |
+| `debut` | nouvelle date de debut, format `JJ/MM/AAAA HH:MM` |
+| `fin` | nouvelle date de fin, format `JJ/MM/AAAA HH:MM` |
+| `lieu` | nouveau lieu |
+| `participants` | nouveau nombre de participants |
+| `notes` | nouvelles notes |
+
+**`event assign-support <event_id>`** demande `email du support a
+assigner` ; renvoie `Collaborateur introuvable : <email>` si l'email ne
+correspond a aucun collaborateur.
+
+### Contrats (`contract`)
+
+| Commande | Description | Role requis |
+|---|---|---|
+| `python main.py contract create` | Creer un contrat pour un client existant | gestion |
+| `python main.py contract list [--unsigned] [--unpaid]` | Lister les contrats | tous (lecture seule) |
+| `python main.py contract update <contract_id>` | Modifier un contrat (montants, signature) | gestion, ou commercial responsable du client |
+
+**`contract create`** demande : `montant total a payer`,
+`montant restant a payer` (format decimal, ex `1500.00`), puis
+`email du client associe`. Renvoie `Client introuvable : <email>` si le
+client n'existe pas.
+
+**`contract list`** :
+- sans option : tous les contrats
+- `--unsigned` : uniquement les contrats non signes
+- `--unpaid` : uniquement les contrats avec un reste a payer
+
+**`contract update <contract_id>`** — champs modifiables :
+
+| Champ | Valeur demandee |
+|---|---|
+| `montant-total` | nouveau montant total (decimal) |
+| `montant-restant` | nouveau montant restant (decimal) |
+| `signe` | contrat signe ? (`o`/`n`) |
+
+La signature d'un contrat (`signe` -> `o`) est journalisee dans Sentry.
 
 ## Tests
 
