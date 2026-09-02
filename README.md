@@ -107,7 +107,7 @@ sert uniquement a ca et refuse de s'executer si un collaborateur existe deja
 en base :
 
 ```bash
-python scripts/create_first_admin.py
+python -m scripts/create_first_admin.py
 ```
 
 Il demande un email, un mot de passe, un prenom et un nom, puis cree un
